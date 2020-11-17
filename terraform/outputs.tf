@@ -35,5 +35,5 @@ output "deployed_to_region" {
 }
 
 output "oci_swarm_basic_source_code" {
-  value = "https://github.com/marcelo-ochoa/oci-swarm-cluster/tree/master/deploy/basic"
+  value = "https://github.com/marcelo-ochoa/oci-swarm-cluster"
 }
