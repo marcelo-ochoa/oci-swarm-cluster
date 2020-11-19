@@ -32,14 +32,20 @@ get_object /root/wallet.64 ${wallet_par}
 base64 --decode /root/wallet.64 > /root/wallet.zip
 unzip /root/wallet.zip -d /usr/lib/oracle/${oracle_client_version}/client64/lib/network/admin/
 
+source /root/swarm.env
+export $(cut -d= -f1 /root/swarm.env)
+ln -s /usr/lib/oracle/${oracle_client_version}/client64/lib/network/admin /root/wallet
+docker plugin set s3fs AWSACCESSKEYID=$AWSACCESSKEYID
+docker plugin set s3fs AWSSECRETACCESSKEY="$AWSSECRETACCESSKEY"
+docker plugin set s3fs DEFAULT_S3FSOPTS="nomultipart,use_path_request_style,url=https://$OBJECT_NAMESPACE.compat.objectstorage.$REGION_ID.oraclecloud.com/"
+docker plugin enable s3fs
+
 # Init DB
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
     sqlplus ADMIN/"${atp_pw}"@${db_name}_tp @/root/catalogue.sql
 fi
 
 if [[ $(echo $(hostname) | grep "\-1$") ]]; then
-    source /root/swarm.env
-    export $(cut -d= -f1 /root/swarm.env)
-    ln -s /usr/lib/oracle/${oracle_client_version}/client64/lib/network/admin /root/wallet
+    docker network create -d overlay lb_network
     docker stack deploy -c /root/docker-compose.yml swarm
 fi

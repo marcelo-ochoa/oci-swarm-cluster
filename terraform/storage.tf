@@ -47,3 +47,39 @@ resource "oci_objectstorage_object" "oci_swarm_media" {
   content_type  = "image/png"
   cache_control = "max-age=604800, public, no-transform"
 }
+
+resource "oci_objectstorage_bucket" "registry" {
+  compartment_id = var.compartment_ocid
+  name           = "oci-registry-${random_string.deploy_id.result}"
+  namespace      = data.oci_objectstorage_namespace.user_namespace.namespace
+  freeform_tags  = local.common_tags
+  kms_key_id     = var.use_encryption_from_oci_vault ? (var.create_new_encryption_key ? oci_kms_key.oci_swarm_key[0].id : var.encryption_key_id) : null
+  depends_on     = [oci_identity_policy.oci_swarm_basic_policies]
+}
+
+resource "oci_objectstorage_object" "registry" {
+  bucket        = oci_objectstorage_bucket.registry.name
+  namespace     = oci_objectstorage_bucket.registry.namespace
+  object        = "README.md"
+  source        = "./README.md"
+  content_type  = "text/plain"
+  cache_control = "max-age=604800, public, no-transform"
+}
+
+resource "oci_objectstorage_bucket" "portainer" {
+  compartment_id = var.compartment_ocid
+  name           = "oci-portainer-${random_string.deploy_id.result}"
+  namespace      = data.oci_objectstorage_namespace.user_namespace.namespace
+  freeform_tags  = local.common_tags
+  kms_key_id     = var.use_encryption_from_oci_vault ? (var.create_new_encryption_key ? oci_kms_key.oci_swarm_key[0].id : var.encryption_key_id) : null
+  depends_on     = [oci_identity_policy.oci_swarm_basic_policies]
+}
+
+resource "oci_objectstorage_object" "portainer" {
+  bucket        = oci_objectstorage_bucket.portainer.name
+  namespace     = oci_objectstorage_bucket.portainer.namespace
+  object        = "README.md"
+  source        = "./README.md"
+  content_type  = "text/plain"
+  cache_control = "max-age=604800, public, no-transform"
+}

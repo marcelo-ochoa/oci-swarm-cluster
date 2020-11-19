@@ -12,6 +12,7 @@ WORKDIR /
 # Create ORM package
 COPY VERSION /
 WORKDIR /basic
+COPY README.md /basic
 COPY terraform/*.tf /basic/
 COPY terraform/*.tfvars.example /basic/
 COPY terraform/schema.yaml /basic/

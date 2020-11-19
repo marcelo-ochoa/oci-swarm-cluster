@@ -140,6 +140,11 @@ data "template_file" "cloud_init" {
     catalogue_password             = random_string.catalogue_db_password.result
     catalogue_port                 = local.catalogue_port
     mock_mode                      = var.services_in_mock_mode
+    deploy_id                      = random_string.deploy_id.result
+    region_id                      = "${var.region}"
+    s3_secret                      = oci_identity_customer_secret_key.oci_user.key
+    s3_key_id                      = oci_identity_customer_secret_key.oci_user.id
+    object_namespace               = oci_objectstorage_bucket.registry.namespace
     db_name                        = oci_database_autonomous_database.oci_swarm_autonomous_database.db_name
     assets_url                     = var.object_storage_oci_swarm_media_visibility == "Private" ? "" : "https://objectstorage.${var.region}.oraclecloud.com/n/${oci_objectstorage_bucket.oci_swarm_media.namespace}/b/${oci_objectstorage_bucket.oci_swarm_media.name}/o/"
   }

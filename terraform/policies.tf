@@ -28,6 +28,18 @@ resource "oci_identity_policy" "oci_swarm_basic_policies" {
   provider = oci.home_region
 }
 
+resource "oci_identity_policy" "storage_admins" {
+  name           = "StorageAdmins.pl"
+  description    = "StorageAdmins.pl"
+  compartment_id = var.compartment_ocid
+
+  statements = [
+    "ALLOW GROUP ${oci_identity_group.storage_admins.name} to manage object-family IN TENANCY",
+    "ALLOW GROUP ${oci_identity_group.storage_admins.name} to manage volume-family IN TENANCY",
+    "ALLOW GROUP ${oci_identity_group.storage_admins.name} to read all-resources IN TENANCY",
+  ]
+}
+
 locals {
   oci_swarm_basic_policies_statement = concat(
     local.allow_object_storage_lifecycle_statement,

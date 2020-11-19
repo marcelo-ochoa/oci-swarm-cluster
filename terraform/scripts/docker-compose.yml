@@ -11,10 +11,49 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.whoami.rule=Path(`/whoami`)
+                - traefik.http.routers.whoami.priority=5
                 - traefik.http.services.whoami.loadbalancer.server.port=80
         networks:
             - lb_network
 
+    registry:
+        image: registry:2
+        ports:
+            - 5000:5000
+        networks:
+            - lb_network
+        volumes:
+            - registry:/var/lib/registry
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels:
+                - traefik.enable=true
+                - traefik.docker.network=lb_network
+                - traefik.constraint-label=traefik-public
+                - traefik.http.routers.registry.entrypoints=http
+                - traefik.http.routers.registry.rule=PathPrefix(`/v2/`)
+                - traefik.http.routers.registry.priority=4
+                - traefik.http.services.registry.loadbalancer.server.port=5000
+
+    portainer:
+        image: portainer/portainer-ce:2.0.0
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - portainer:/data
+        networks:
+            - lb_network
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels:
+                - traefik.enable=true
+                - traefik.docker.network=lb_network
+                - traefik.constraint-label=traefik-public
+                - traefik.http.routers.portainer.entrypoints=http
+                - traefik.http.routers.portainer.rule=PathPrefix(`/`)
+                - traefik.http.routers.portainer.priority=1
+                - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
         image: traefik:v2.3.1
@@ -49,7 +88,17 @@ services:
         networks:
             - lb_network
 
+volumes:
+  registry:
+    driver: s3fs
+    name: "oci-registry-$DEPLOY_ID"
+  portainer:
+    driver: s3fs
+    name: "oci-portainer-$DEPLOY_ID"
+
 networks:
   # Use the previously created public network "traefik-public", shared with other
   # services that need to be publicly available via this Traefik
   lb_network:
+    external: true
+    

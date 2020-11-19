@@ -38,6 +38,11 @@ write_files:
       OADB_PW='${catalogue_password}'
       OADB_SERVICE=${db_name}_tp
       STATIC_MEDIA_URL=${assets_url}
+      DEPLOY_ID=${deploy_id}
+      REGION_ID=${region_id}
+      OBJECT_NAMESPACE=${object_namespace}
+      AWSSECRETACCESSKEY=${s3_secret}
+      AWSACCESSKEYID=${s3_key_id}
 
 runcmd:
  - echo "Running prep scripts..."
