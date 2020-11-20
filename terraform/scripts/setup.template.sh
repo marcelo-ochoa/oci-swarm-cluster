@@ -63,7 +63,7 @@ else
     fi
 fi
 echo "${private_key_pem}" > /root/.ssh/id_rsa
-echo "${public_key_openssh}" >> /root/.ssh/authorized_keys
+echo "${public_key_openssh}" > /root/.ssh/authorized_keys
 chmod go-rwx /root/.ssh/*
 
 docker plugin install --alias glusterfs mochoa/glusterfs-volume-plugin --grant-all-permissions --disable
