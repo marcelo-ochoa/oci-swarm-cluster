@@ -47,5 +47,6 @@ fi
 
 if [[ $(echo $(hostname) | grep "\-1$") ]]; then
     docker network create -d overlay lb_network
+    docker network create -d overlay agent_network
     docker stack deploy -c /root/docker-compose.yml swarm
 fi

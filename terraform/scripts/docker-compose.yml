@@ -36,12 +36,32 @@ services:
                 - traefik.http.routers.registry.priority=4
                 - traefik.http.services.registry.loadbalancer.server.port=5000
 
+    agent:
+        image: portainer/agent
+        environment:
+            # REQUIRED: Should be equal to the service name prefixed by "tasks." when
+            # deployed inside an overlay network
+            AGENT_CLUSTER_ADDR: tasks.swarm_agent
+            # AGENT_PORT: 9001
+            # LOG_LEVEL: debug
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/lib/docker/volumes:/var/lib/docker/volumes
+        networks:
+            - agent_network
+        deploy:
+            mode: global
+            placement:
+                constraints: [node.platform.os == linux]
+
     portainer:
         image: portainer/portainer-ce:2.0.0
+        command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - portainer:/data
         networks:
+            - agent_network
             - lb_network
         deploy:
             mode: replicated
@@ -101,4 +121,5 @@ networks:
   # services that need to be publicly available via this Traefik
   lb_network:
     external: true
-    
+  agent_network:
+    external: true
