@@ -141,7 +141,7 @@ data "template_file" "cloud_init" {
     catalogue_port                 = local.catalogue_port
     mock_mode                      = var.services_in_mock_mode
     deploy_id                      = random_string.deploy_id.result
-    region_id                      = "${var.region}"
+    region_id                      = var.region
     s3_secret                      = oci_identity_customer_secret_key.oci_user.key
     s3_key_id                      = oci_identity_customer_secret_key.oci_user.id
     object_namespace               = oci_objectstorage_bucket.registry.namespace

@@ -45,7 +45,7 @@ variable "is_pv_encryption_in_transit_enabled" {
 
 # Network Details
 variable "lb_shape" {
-  default = "10Mbps-Micro"
+  default = "10Mbps"
 }
 variable "lb_compartment_ocid" {
   default = ""

@@ -43,7 +43,9 @@ mkfs.xfs -f -i size=512 -L glusterfs /home/fs.img
 mkdir -p /data/glusterfs/myvolume/mybrick
 echo '/home/fs.img /data/glusterfs/myvolume/mybrick xfs defaults  0 0' >> /etc/fstab
 mount -a && df
-yum install -y glusterfs-server docker-engine
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sed -i "s/\$releasever/7/g" /etc/yum.repos.d/docker-ce.repo
+yum install -y glusterfs-server docker-ce docker-ce-cli containerd.io
 systemctl enable --now glusterd
 systemctl enable --now docker
 
