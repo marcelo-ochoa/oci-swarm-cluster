@@ -212,7 +212,7 @@ variables:
   lb_shape:
     type: enum
     enum:
-    - "10Mbps-Micro"
+    - "10Mbps"
     - "100Mbps"
     - "400Mbps"
     - "8000Mbps"

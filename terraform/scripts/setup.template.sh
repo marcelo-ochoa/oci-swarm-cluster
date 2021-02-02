@@ -72,10 +72,9 @@ docker plugin install --alias glusterfs mochoa/glusterfs-volume-plugin --grant-a
 
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
     docker swarm init --advertise-addr ens3
-    docker plugin set glusterfs SERVERS=localhost,$(echo $(hostname) | sed s/\-0/\-1/)
-else
-    docker plugin set glusterfs SERVERS=localhost,$(echo $(hostname) | sed s/\-1/\-0/)
 fi
+
+docker plugin set glusterfs SERVERS=localhost
 
 docker plugin enable glusterfs
 docker plugin install --alias s3fs mochoa/s3fs-volume-plugin --grant-all-permissions --disable

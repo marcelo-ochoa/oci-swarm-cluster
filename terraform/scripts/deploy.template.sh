@@ -49,6 +49,14 @@ mkdir -p /var/log/traefik
 mkdir -p /root/data/action.d/
 mkdir -p /root/data/filter.d/
 mkdir -p /root/data/jail.d/
+echo '[sshd]' >> /root/data/jail.d/sshd.conf
+echo 'enabled = true' >> /root/data/jail.d/sshd.conf
+echo 'chain = INPUT' >> /root/data/jail.d/sshd.conf
+echo 'port = ssh' >> /root/data/jail.d/sshd.conf
+echo 'filter = sshd[mode=aggressive]' >> /root/data/jail.d/sshd.conf
+echo 'logpath = /var/log/secure' >> /root/data/jail.d/sshd.conf
+echo 'maxretry = 5' >> /root/data/jail.d/sshd.conf
+
 # start fail2ban as Docker container
 docker run -d --name fail2ban \
     --restart always \
