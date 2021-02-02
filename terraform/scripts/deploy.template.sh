@@ -45,6 +45,21 @@ if [[ $(echo $(hostname) | grep "\-0$") ]]; then
     sqlplus ADMIN/"${atp_pw}"@${db_name}_tp @/root/catalogue.sql
 fi
 
+mkdir -p /var/log/traefik
+mkdir -p /root/data/action.d/
+mkdir -p /root/data/filter.d/
+mkdir -p /root/data/jail.d/
+# start fail2ban as Docker container
+docker run -d --name fail2ban \
+    --restart always \
+    --network host \
+    --cap-add NET_ADMIN \
+    --cap-add NET_RAW \
+    -v /root/data:/data \
+    -v /var/log:/var/log:ro \
+    -e F2B_LOG_LEVEL=DEBUG \
+    crazymax/fail2ban:latest
+
 if [[ $(echo $(hostname) | grep "\-1$") ]]; then
     docker network create -d overlay lb_network
     docker network create -d overlay agent_network

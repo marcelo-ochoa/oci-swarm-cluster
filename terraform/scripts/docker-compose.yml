@@ -81,11 +81,7 @@ services:
             - target: 80
               published: 80
               protocol: tcp
-              mode: host
-            - target: 443
-              published: 443
-              protocol: tcp
-              mode: host      
+              mode: host    
         deploy:
             mode: global
             restart_policy:
@@ -94,17 +90,23 @@ services:
                 window: 120s
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
+            - /var/log/traefik:/var/log/traefik:rw
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
             - --providers.docker.exposedbydefault=false
             - --providers.docker.swarmmode
             - --entrypoints.http.address=:80
-            - --entrypoints.https.address=:443
+            - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
             #- --log.level=INFO
             - --accesslog
-            - --log
             - --api
+            - --log
+            - --log.filePath=/var/log/traefik/traefik.log
+            - --accesslog.filepath=/var/log/traefik/access.log
+            - --accesslog.filters.statuscodes=400-499
+            - --accesslog.filters.retryattempts
+            - --accesslog.filters.minduration=10ms
         networks:
             - lb_network
 
