@@ -49,19 +49,26 @@ yum install -y glusterfs-server docker-ce docker-ce-cli containerd.io
 systemctl enable --now glusterd
 systemctl enable --now docker
 
+source /root/swarm.env
+export $(cut -d= -f1 /root/swarm.env)
+
 my_ip=$(ip a show ens3|grep inet|cut -d' ' -f6| sed 's/\/24//')
+my_base_hostname="oci-swarm-$DEPLOY_ID"
+
 echo "$my_ip  $(hostname)" >> /etc/hosts
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
     if [[ "$my_ip" == 10.1.21.2 ]]; then
-        echo "10.1.21.3  $(echo $(hostname) | sed s/\-0/\-1/)" >> /etc/hosts
+        echo "10.1.21.3  $my_base_hostname-1" >> /etc/hosts
     else
-        echo "10.1.21.2  $(echo $(hostname) | sed s/\-0/\-1/)" >> /etc/hosts
+        echo "10.1.21.2  $my_base_hostname-1" >> /etc/hosts
     fi
 else
-    if [[ "$my_ip" == 10.1.21.3 ]]; then
-        echo "10.1.21.2  $(echo $(hostname) | sed s/\-1/\-0/)" >> /etc/hosts
-    else
-        echo "10.1.21.3  $(echo $(hostname) | sed s/\-1/\-0/)" >> /etc/hosts
+    if [[ $(echo $(hostname) | grep "\-1$") ]]; then
+        if [[ "$my_ip" == 10.1.21.3 ]]; then
+            echo "10.1.21.2  $my_base_hostname-0" >> /etc/hosts
+        else
+            echo "10.1.21.3  $my_base_hostname-0" >> /etc/hosts
+        fi
     fi
 fi
 echo "${private_key_pem}" > /root/.ssh/id_rsa
@@ -88,7 +95,7 @@ volume_ready() {
 }
 
 mount_gluster_vol () {
-    peer_host=$(echo $(hostname) | sed s/\-1/\-0/)
+    peer_host="$my_base_hostname-0"
     while !(peer_ready $peer_host)
     do
         sleep 3
@@ -104,13 +111,13 @@ mount_gluster_vol () {
 }
 
 create_gluster_vol () {
-    peer_host=$(echo $(hostname) | sed s/\-0/\-1/)
+    peer_host="$my_base_hostname-1"
     while !(peer_ready $peer_host)
     do
         sleep 3
     done
     sleep 10s
-    gluster volume create myvolume replica 2 $(echo $(hostname) | sed s/\-0//)-{0,1}:/data/glusterfs/myvolume/mybrick/brick force
+    gluster volume create myvolume replica 2 $my_base_hostname-{0,1}:/data/glusterfs/myvolume/mybrick/brick force
     gluster volume start myvolume
     sleep 10s
     mkdir -p /gluster-storage
@@ -121,9 +128,14 @@ create_gluster_vol () {
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
     create_gluster_vol
 else
-    mount_gluster_vol
-    sleep 30s
-    eval $(ssh -o "StrictHostKeyChecking no" root@$(echo $(hostname) | sed s/\-1/\-0/) docker swarm join-token manager | tail -2)
+    if [[ $(echo $(hostname) | grep "\-1$") ]]; then
+        mount_gluster_vol
+        sleep 30s
+        eval $(ssh -o "StrictHostKeyChecking no" root@$my_base_hostname-0 docker swarm join-token manager | tail -2)
+    else
+        sleep 30s
+        eval $(ssh -o "StrictHostKeyChecking no" root@$my_base_hostname-0 docker swarm join-token worker | tail -2)
+    fi
 fi
 
 ######################################
