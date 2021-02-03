@@ -38,7 +38,7 @@ resource "oci_load_balancer_backend" "oci-swarm-be" {
   offline          = false
   weight           = 1
 
-  count = var.num_nodes
+  count = (var.num_nodes > 2) ? 2 : var.num_nodes
 }
 
 resource "oci_load_balancer_listener" "oci_swarm_listener_80" {

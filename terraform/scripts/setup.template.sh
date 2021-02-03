@@ -127,7 +127,6 @@ else
         sleep 30s
         eval $(ssh -o "StrictHostKeyChecking no" root@$my_base_hostname-0 docker swarm join-token manager | tail -2)
     else
-        sleep 30s
         eval $(ssh -o "StrictHostKeyChecking no" root@$my_base_hostname-0 docker swarm join-token worker | tail -2)
     fi
 fi
