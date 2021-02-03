@@ -55,20 +55,14 @@ export $(cut -d= -f1 /root/swarm.env)
 my_ip=$(ip a show ens3|grep inet|cut -d' ' -f6| sed 's/\/24//')
 my_base_hostname="oci-swarm-$DEPLOY_ID"
 
-echo "$my_ip  $(hostname)" >> /etc/hosts
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
-    if [[ "$my_ip" == 10.1.21.2 ]]; then
-        echo "10.1.21.3  $my_base_hostname-1" >> /etc/hosts
-    else
-        echo "10.1.21.2  $my_base_hostname-1" >> /etc/hosts
-    fi
+    echo "$(host oci-swarm-$DEPLOY_ID-1|cut -d' ' -f4) oci-swarm-$DEPLOY_ID-1" >> /etc/hosts
 else
     if [[ $(echo $(hostname) | grep "\-1$") ]]; then
-        if [[ "$my_ip" == 10.1.21.3 ]]; then
-            echo "10.1.21.2  $my_base_hostname-0" >> /etc/hosts
-        else
-            echo "10.1.21.3  $my_base_hostname-0" >> /etc/hosts
-        fi
+        echo "$(host oci-swarm-$DEPLOY_ID-0|cut -d' ' -f4) oci-swarm-$DEPLOY_ID-0" >> /etc/hosts
+    else
+        echo "$(host oci-swarm-$DEPLOY_ID-0|cut -d' ' -f4) oci-swarm-$DEPLOY_ID-0" >> /etc/hosts
+        echo "$(host oci-swarm-$DEPLOY_ID-1|cut -d' ' -f4) oci-swarm-$DEPLOY_ID-1" >> /etc/hosts
     fi
 fi
 echo "${private_key_pem}" > /root/.ssh/id_rsa
