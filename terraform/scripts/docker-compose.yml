@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
     whoami:
-        image: traefik/whoami:v1.6.0
+        image: traefik/whoami:v1.6.1
         deploy:
             mode: replicated
             replicas: 1
@@ -55,7 +55,7 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:2.0.0
+        image: portainer/portainer-ce:2.1.0
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -76,7 +76,7 @@ services:
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
-        image: traefik:v2.3.1
+        image: traefik:v2.4.2
         ports:
             - target: 80
               published: 80

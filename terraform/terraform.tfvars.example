@@ -10,13 +10,13 @@
 #############################################################################################################################
 
 # OCI authentication
-tenancy_ocid     = "ocid1.tenancy....."
+tenancy_ocid     = "ocid1.tenancy.oc1....."
 fingerprint      = "" # e.g.: "5f:53:..." or leave blank if using CloudShell
 user_ocid        = "" # e.g.: "ocid1.user..." or leave blank if using CloudShell
 private_key_path = "" # e.g.: "/users/user/.oci/oci_api_key.pem" or leave blank if using CloudShell
 
 # Deployment compartment
-compartment_ocid = "ocid1.compartment...."
+compartment_ocid = "ocid1.tenancy.oc1....."
 
 # region
 region = "us-phoenix-1"
@@ -31,7 +31,7 @@ is_pv_encryption_in_transit_enabled = false
 
 # Network Details
 lb_shape             = "10Mbps"
-lb_compartment_ocid  = "" # e.g.: "ocid1.compartment..." 
+lb_compartment_ocid  = "" # e.g.: "ocid1.tenancy.oc1....." 
 create_secondary_vcn = false
 
 # Autonomous Database
@@ -39,7 +39,7 @@ autonomous_database_license_model            = "LICENSE_INCLUDED" # LICENSE_INCL
 autonomous_database_is_free_tier             = true
 autonomous_database_visibility               = "Public"
 autonomous_database_name                     = "OciSwarmDB"
-autonomous_database_db_version               = "19c"
+autonomous_database_db_version               = "21c"
 autonomous_database_cpu_core_count           = 1
 autonomous_database_data_storage_size_in_tbs = 1
 
@@ -53,5 +53,5 @@ encryption_key_id             = ""
 use_only_always_free_elegible_resources = true
 
 # Object Storage
-object_storage_oci_swarm_media_compartment_ocid = "" # e.g.: "ocid1.compartment..."
+object_storage_oci_swarm_media_compartment_ocid = "" # e.g.: "ocid1.tenancy.oc1....."
 object_storage_oci_swarm_media_visibility       = "Public"
