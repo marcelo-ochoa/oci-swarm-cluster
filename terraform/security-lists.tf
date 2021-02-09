@@ -43,6 +43,16 @@ resource "oci_core_security_list" "oci_swarm_security_list" {
     }
   }
 
+  ingress_security_rules {
+    protocol = local.tcp_protocol_number
+    source   = lookup(var.network_cidrs, (var.instance_visibility == "Private") ? "MAIN-VCN-CIDR" : "ALL-CIDR")
+
+    tcp_options {
+      max = local.https_port_number
+      min = local.https_port_number
+    }
+  }
+
   dynamic "egress_security_rules" {
     for_each = var.create_secondary_vcn ? [1] : []
     content {

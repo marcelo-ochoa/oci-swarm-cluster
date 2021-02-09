@@ -9,6 +9,12 @@ resource "oci_load_balancer_load_balancer" "oci_swarm_lb" {
   subnet_ids     = [oci_core_subnet.oci_swarm_lb_subnet.id]
   is_private     = "false"
   freeform_tags  = local.common_tags
+  # Choose flexible as shape in var.lb_shape
+  shape_details {
+        #Required
+        maximum_bandwidth_in_mbps = 10
+        minimum_bandwidth_in_mbps = 10
+    }
 }
 
 resource "oci_load_balancer_backend_set" "oci_swarm_bes" {

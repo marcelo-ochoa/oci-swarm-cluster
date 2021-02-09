@@ -10,8 +10,9 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.whoami.rule=Path(`/whoami`)
-                - traefik.http.routers.whoami.priority=5
+                - traefik.http.routers.whoami.rule=(Host(`registry.mydomain.com`) && Path(`/whoami`))
+                #- traefik.http.routers.whoami.entrypoints=https
+                #- traefik.http.routers.whoami.tls=true
                 - traefik.http.services.whoami.loadbalancer.server.port=80
         networks:
             - lb_network
@@ -31,9 +32,9 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.registry.entrypoints=http
-                - traefik.http.routers.registry.rule=PathPrefix(`/v2/`)
-                - traefik.http.routers.registry.priority=4
+                - traefik.http.routers.registry.rule=(Host(`registry.mydomain.com`) && PathPrefix(`/v2/`))
+                #- traefik.http.routers.registry.entrypoints=https
+                #- traefik.http.routers.registry.tls=true
                 - traefik.http.services.registry.loadbalancer.server.port=5000
 
     agent:
@@ -55,7 +56,7 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:2.1.0
+        image: portainer/portainer-ce:2.1.1
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -70,9 +71,9 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.portainer.entrypoints=http
-                - traefik.http.routers.portainer.rule=PathPrefix(`/`)
-                - traefik.http.routers.portainer.priority=1
+                - traefik.http.routers.portainer.rule=(Host(`dev-oci.mydomain.com`) && PathPrefix(`/`))
+                #- traefik.http.routers.portainer.entrypoints=https
+                #- traefik.http.routers.portainer.tls=true
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
@@ -81,7 +82,11 @@ services:
             - target: 80
               published: 80
               protocol: tcp
-              mode: host    
+              mode: host
+            - target: 443
+              published: 443
+              protocol: tcp
+              mode: host
         deploy:
             mode: global
             placement:
@@ -100,14 +105,16 @@ services:
             - --providers.docker.exposedbydefault=false
             - --providers.docker.swarmmode
             - --entrypoints.http.address=:80
+            - --entrypoints.https.address=:443
             - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
+            #- --entryPoints.https.forwardedHeaders.trustedIPs=127.0.0.1/32,130.35.0.0/16,138.1.0.0/16,147.154.0.0/16,192.157.18.0/23,192.29.0.0/16,192.69.118.0/23,198.181.48.0/21,199.195.6.0/23,205.147.88.0/21
             #- --log.level=INFO
             - --accesslog
             - --api
             - --log
             - --log.filePath=/var/log/traefik/traefik.log
             - --accesslog.filepath=/var/log/traefik/access.log
-            - --accesslog.filters.statuscodes=400-499
+            - --accesslog.filters.statuscodes=200-499
             - --accesslog.filters.retryattempts
             - --accesslog.filters.minduration=10ms
         networks:

@@ -10,6 +10,7 @@
 
 # Configure firewall
 firewall-offline-cmd --add-port=80/tcp
+firewall-offline-cmd --add-port=443/tcp
 # GlusterFS
 firewall-offline-cmd --zone=public --add-port=24007-24008/tcp
 firewall-offline-cmd --zone=public --add-port=24007-24008/udp
@@ -127,6 +128,7 @@ else
         sleep 30s
         eval $(ssh -o "StrictHostKeyChecking no" root@$my_base_hostname-0 docker swarm join-token manager | tail -2)
     else
+        sleep 60s
         eval $(ssh -o "StrictHostKeyChecking no" root@$my_base_hostname-0 docker swarm join-token worker | tail -2)
     fi
 fi
