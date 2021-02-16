@@ -30,7 +30,7 @@ public_ssh_key                      = ""
 is_pv_encryption_in_transit_enabled = false
 
 # Network Details
-lb_shape             = "10Mbps-Micro"
+lb_shape             = "flexible"
 lb_compartment_ocid  = "" # e.g.: "ocid1.tenancy.oc1....." 
 create_secondary_vcn = false
 
