@@ -44,16 +44,7 @@ This creates a `.zip` file in your working directory that can be imported in to 
 
 ## Using local or CloudShell terraform instead of ORM stack
 
-After complete the Build steps 1 and 2, generate the binaries:
-
-- From the root of the repo execute the command:
-
-`docker run -v $PWD:/transfer --rm --entrypoint cp oci-swarm:latest /package/oci-swarm.tar.gz /transfer/terraform/scripts/oci-swarm.tar.gz`
-
-- Rename the file `terraform.tfvars.example` to `terraform.tfvars`
-- Change the credentials variables to your user and any other desirable variables
-- Run `terraform init` to init the terraform providers
-- Run `terraform apply` to create the resources on OCI
+Follow guide https://github.com/marcelo-ochoa/oci-swarm-cluster/tree/main/terraform#using-local-or-cloudshell-terraform
 
 [oci]: https://cloud.oracle.com/en_US/cloud-infrastructure
 [orm]: https://docs.cloud.oracle.com/iaas/Content/ResourceManager/Concepts/resourcemanager.htm
