@@ -212,6 +212,7 @@ variables:
   lb_shape:
     type: enum
     enum:
+    - "flexible"
     - "10Mbps"
     - "100Mbps"
     - "400Mbps"

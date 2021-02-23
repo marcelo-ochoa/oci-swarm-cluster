@@ -23,30 +23,28 @@ firewall-offline-cmd --zone=public --add-port=7946/udp
 firewall-offline-cmd --zone=public --add-port=4789/udp
 systemctl restart firewalld
 
-# Install the yum repo
-yum clean metadata
-yum-config-manager --enable ol7_latest
+dnf clean metadata
 
 # Install tools
-yum -y erase nodejs
-yum -y install unzip jq
+dnf -y erase nodejs
+dnf -y install unzip jq
 
 # Install Oracle Instant Client
-yum -y install oracle-release-el7
-yum-config-manager --enable ol7_oracle_instantclient
-yum -y install oracle-instantclient${oracle_client_version}-basic oracle-instantclient${oracle_client_version}-jdbc oracle-instantclient${oracle_client_version}-sqlplus
+dnf -y install oracle-release-el8
+dnf config-manager --enable ol8_oracle_instantclient
+dnf -y install oracle-instantclient${oracle_client_version}-basic oracle-instantclient${oracle_client_version}-jdbc oracle-instantclient${oracle_client_version}-sqlplus
 
 # Setup GlusterFS and Docker
-yum install -y oracle-gluster-release-el7
-yum-config-manager --enable ol7_gluster5 ol7_addons ol7_latest ol7_optional_latest ol7_UEKR5
+dnf -y install oracle-gluster-release-el8
+dnf config-manager --enable ol8_gluster_appstream ol8_baseos_latest ol8_appstream
 dd if=/dev/zero of=/home/fs.img count=0 bs=1 seek=20G
 mkfs.xfs -f -i size=512 -L glusterfs /home/fs.img
 mkdir -p /data/glusterfs/myvolume/mybrick
 echo '/home/fs.img /data/glusterfs/myvolume/mybrick xfs defaults  0 0' >> /etc/fstab
 mount -a && df
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sed -i "s/\$releasever/7/g" /etc/yum.repos.d/docker-ce.repo
-yum install -y glusterfs-server docker-ce docker-ce-cli containerd.io
+dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sed -i "s/\$releasever/8/g" /etc/yum.repos.d/docker-ce.repo
+dnf -y install glusterfs-server docker-ce docker-ce-cli containerd.io
 systemctl enable --now glusterd
 systemctl enable --now docker
 

@@ -34,7 +34,7 @@ variable "image_operating_system" {
   default = "Oracle Linux"
 }
 variable "image_operating_system_version" {
-  default = "7.8"
+  default = "8"
 }
 variable "instance_visibility" {
   default = "Public"
@@ -45,7 +45,7 @@ variable "is_pv_encryption_in_transit_enabled" {
 
 # Network Details
 variable "lb_shape" {
-  default = "10Mbps"
+  default = "flexible"
 }
 variable "lb_compartment_ocid" {
   default = ""
@@ -95,7 +95,7 @@ variable "autonomous_database_visibility" {
   default = "Public"
 }
 variable "oracle_client_version" {
-  default = "19.8"
+  default = "19.9"
 }
 
 # Encryption (OCI Vault/Key Management/KMS)

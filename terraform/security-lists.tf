@@ -25,11 +25,11 @@ resource "oci_core_security_list" "oci_swarm_security_list" {
 
   ingress_security_rules {
     protocol = local.tcp_protocol_number
-    source   = lookup(var.network_cidrs, var.create_secondary_vcn ? "LB-SUBNET-REGIONAL-CIDR" : "MAIN-LB-SUBNET-REGIONAL-CIDR")
+    source   = lookup(var.network_cidrs, (var.instance_visibility == "Private") ? "MAIN-VCN-CIDR" : "ALL-CIDR")
 
     tcp_options {
-      max = local.microservices_port_number
-      min = local.microservices_port_number
+      max = local.http_port_number
+      min = local.http_port_number
     }
   }
 
