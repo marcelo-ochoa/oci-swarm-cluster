@@ -23,10 +23,9 @@ firewall-offline-cmd --zone=public --add-port=7946/udp
 firewall-offline-cmd --zone=public --add-port=4789/udp
 systemctl restart firewalld
 
-dnf clean metadata
+dnf clean metadata -y
 
 # Install tools
-dnf -y erase nodejs
 dnf -y install unzip jq
 
 # Install Oracle Instant Client

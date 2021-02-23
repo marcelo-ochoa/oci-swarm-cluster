@@ -10,7 +10,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.whoami.rule=(Host(`registry.mydomain.com`) && Path(`/whoami`))
+                - traefik.http.routers.whoami.rule=Path(`/whoami`)
                 #- traefik.http.routers.whoami.entrypoints=https
                 #- traefik.http.routers.whoami.tls=true
                 - traefik.http.services.whoami.loadbalancer.server.port=80
