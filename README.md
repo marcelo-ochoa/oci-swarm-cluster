@@ -27,24 +27,20 @@ The application uses a typical topology for a 3-tier web application as follows
 | Route Tables          | Route tables route traffic that leaves the VCN.                                                                | The public subnet route rules direct traffic to use the Internet Gateway, while the private subnet route rules enable the compute instances to reach the internet through the NAT gateway and OCI services through the service gateway | [Learn More][rt]      |
 | Security Lists        | Security Lists act like a firewall with the rules determining what type of traffic is allowed in or out.       | Security rules enable HTTP traffic to the LoadBalancer from anywhere. Also enables are HTTP and SSH traffic to the compute instances, but only from the subnet where the load balancer is.                                             | [Learn More][seclist] |
 
-## Build
+## Using local or CloudShell terraform
 
-1. Clone <https://github.com/marcelo-ochoa/oci-swarm-cluster>
-2. From the root of the repo execute the command:
- `docker build -t oci-swarm -f Dockerfile .`
-3. Generate Stack Zip Package for OCI Resource Manager
+Clone <https://github.com/marcelo-ochoa/oci-swarm-cluster> and change to directory terraform
 
-`docker run -v $PWD:/transfer --rm --entrypoint cp oci-swarm:latest /package/oci-swarm-stack.zip /transfer/oci-swarm-stack.zip`
+- Rename the file `terraform.tfvars.example` to `terraform.tfvars`
+- Change the credentials variables to your user and any other desirable variables
+- Run `terraform init` to init the terraform providers
+- Run `terraform apply` to create the resources on OCI
 
-or under windows powershell:
+## Using Resource Manager GitHub Connector
 
-`docker run -v "$((pwd).path -replace '\\', '/'):/transfer" --rm --entrypoint cp oci-swarm:latest /package/oci-swarm-stack.zip /transfer/oci-swarm-stack.zip`
+Just Fork <https://github.com/marcelo-ochoa/oci-swarm-cluster> using your GitHub account and import using OCI Resource Manager. See how it works this video:
 
-This creates a `.zip` file in your working directory that can be imported in to OCI Resource Manager.
-
-## Using local or CloudShell terraform instead of ORM stack
-
-Follow guide https://github.com/marcelo-ochoa/oci-swarm-cluster/tree/main/terraform#using-local-or-cloudshell-terraform
+[![](http://img.youtube.com/vi/mnF090QRqO4/0.jpg)](http://www.youtube.com/watch?v=mnF090QRqO4&start=245 "OCI Resource Manager GitHub Integration")
 
 [oci]: https://cloud.oracle.com/en_US/cloud-infrastructure
 [orm]: https://docs.cloud.oracle.com/iaas/Content/ResourceManager/Concepts/resourcemanager.htm
