@@ -29,7 +29,7 @@ The application uses a typical topology for a 3-tier web application as follows
 
 ## Using local or CloudShell terraform
 
-Clone <https://github.com/marcelo-ochoa/oci-swarm-cluster> and change to directory terraform
+Clone <https://github.com/marcelo-ochoa/oci-swarm-cluster>
 
 - Rename the file `terraform.tfvars.example` to `terraform.tfvars`
 - Change the credentials variables to your user and any other desirable variables
@@ -38,9 +38,16 @@ Clone <https://github.com/marcelo-ochoa/oci-swarm-cluster> and change to directo
 
 ## Using Resource Manager GitHub Connector
 
-Just Fork <https://github.com/marcelo-ochoa/oci-swarm-cluster> using your GitHub account and import using OCI Resource Manager. See how it works this video:
+Just Fork <https://github.com/marcelo-ochoa/oci-swarm-cluster> using your GitHub account and import using OCI Resource Manager. See how it works on this video:
 
 [![](http://img.youtube.com/vi/mnF090QRqO4/0.jpg)](http://www.youtube.com/watch?v=mnF090QRqO4&start=245 "OCI Resource Manager GitHub Integration")
+
+## Deploy as Zip file
+
+Clone <https://github.com/marcelo-ochoa/oci-swarm-cluster>
+
+- Go into directory oci-swarm-cluster and zip it using "zip -r ../oci-swarm-cluster.zip *"
+- Upload oci-swarm-cluster.zip on using OCI Resource Manager pane
 
 [oci]: https://cloud.oracle.com/en_US/cloud-infrastructure
 [orm]: https://docs.cloud.oracle.com/iaas/Content/ResourceManager/Concepts/resourcemanager.htm
