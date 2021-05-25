@@ -28,7 +28,7 @@ variable "generate_public_ssh_key" {
   default = true
 }
 variable "instance_shape" {
-  default = "VM.Standard.E2.1.Micro"
+  default = "VM.Standard.A1.Flex"
 }
 variable "image_operating_system" {
   default = "Oracle Linux"
@@ -95,7 +95,7 @@ variable "autonomous_database_visibility" {
   default = "Public"
 }
 variable "oracle_client_version" {
-  default = "19.9"
+  default = "19.10"
 }
 
 # Encryption (OCI Vault/Key Management/KMS)

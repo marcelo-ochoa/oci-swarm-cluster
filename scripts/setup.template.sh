@@ -50,7 +50,7 @@ systemctl enable --now docker
 source /root/swarm.env
 export $(cut -d= -f1 /root/swarm.env)
 
-my_ip=$(ip a show ens3|grep inet|cut -d' ' -f6| sed 's/\/24//')
+my_ip=$(ip a show enp0s3|grep 'inet '|cut -d' ' -f6| sed 's/\/24//')
 my_base_hostname="oci-swarm-$DEPLOY_ID"
 
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
@@ -67,16 +67,16 @@ echo "${private_key_pem}" > /root/.ssh/id_rsa
 echo "${public_key_openssh}" > /root/.ssh/authorized_keys
 chmod go-rwx /root/.ssh/*
 
-docker plugin install --alias glusterfs mochoa/glusterfs-volume-plugin --grant-all-permissions --disable
+docker plugin install --alias glusterfs mochoa/glusterfs-volume-plugin-aarch64 --grant-all-permissions --disable
 
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
-    docker swarm init --advertise-addr ens3
+    docker swarm init --advertise-addr enp0s3
 fi
 
 docker plugin set glusterfs SERVERS=localhost
 
 docker plugin enable glusterfs
-docker plugin install --alias s3fs mochoa/s3fs-volume-plugin --grant-all-permissions --disable
+docker plugin install --alias s3fs mochoa/s3fs-volume-plugin-aarch64 --grant-all-permissions --disable
 
 peer_ready() {
     gluster peer probe $1 > /dev/null 2>&1

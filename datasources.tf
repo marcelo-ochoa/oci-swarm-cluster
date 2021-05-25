@@ -65,18 +65,9 @@ data "oci_limits_services" "compute_services" {
     values = ["compute"]
   }
 }
-data "oci_limits_limit_definitions" "compute_limit_definitions" {
-  compartment_id = var.tenancy_ocid
-  service_name   = data.oci_limits_services.compute_services.services.0.name
-
-  filter {
-    name   = "description"
-    values = [var.instance_shape]
-  }
-}
 data "oci_limits_resource_availability" "compute_resource_availability" {
   compartment_id      = var.tenancy_ocid
-  limit_name          = data.oci_limits_limit_definitions.compute_limit_definitions.limit_definitions[0].name
+  limit_name          = "standard2-core-count"
   service_name        = data.oci_limits_services.compute_services.services.0.name
   availability_domain = data.oci_identity_availability_domains.ADs.availability_domains[count.index].name
 
