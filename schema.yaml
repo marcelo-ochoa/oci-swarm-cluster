@@ -23,6 +23,8 @@ groupings:
   - title: "General Configuration"
     variables:
     - num_nodes
+    - memory_in_gbs
+    - ocpus
 
   - title: "Optional Configuration"
     variables:
@@ -101,8 +103,34 @@ variables:
     enum:
     - "1"
     - "2"
+    - "3"
+    - "4"
     title: "Node Count"
     description: "Choose the number of compute instances to deploy."
+    default: "2"
+    required: true
+
+  memory_in_gbs:
+    type: enum
+    enum:
+    - "6"
+    - "12"
+    - "18"
+    - "24"
+    title: "Amount of memory (GB)"
+    description: "Memory is restricted by account limits."
+    default: "12"
+    required: true
+
+  ocpus:
+    type: enum
+    enum:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    title: "Number of OCPUs"
+    description: "OCPU count is restricted by account limits."
     default: "2"
     required: true
 

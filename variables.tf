@@ -24,6 +24,12 @@ variable "public_ssh_key" {
 variable "num_nodes" {
   default = 2
 }
+variable "memory_in_gbs" {
+  default = 12
+}
+variable "ocpus" {
+  default = 2
+}
 variable "generate_public_ssh_key" {
   default = true
 }
