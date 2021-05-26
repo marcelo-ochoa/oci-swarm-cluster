@@ -67,7 +67,7 @@ data "oci_limits_services" "compute_services" {
 }
 data "oci_limits_resource_availability" "compute_resource_availability" {
   compartment_id      = var.tenancy_ocid
-  limit_name          = "standard2-core-count"
+  limit_name          = "standard-a1-core-count"
   service_name        = data.oci_limits_services.compute_services.services.0.name
   availability_domain = data.oci_identity_availability_domains.ADs.availability_domains[count.index].name
 
