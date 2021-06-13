@@ -31,7 +31,7 @@ dnf -y install unzip jq
 # Install Oracle Instant Client
 dnf -y install oracle-release-el8
 dnf config-manager --enable ol8_oracle_instantclient
-dnf -y install oracle-instantclient${oracle_client_version}-basic oracle-instantclient${oracle_client_version}-jdbc oracle-instantclient${oracle_client_version}-sqlplus
+dnf -y install git oracle-instantclient${oracle_client_version}-basic oracle-instantclient${oracle_client_version}-jdbc oracle-instantclient${oracle_client_version}-sqlplus
 
 # Setup GlusterFS and Docker
 dnf -y install oracle-gluster-release-el8
@@ -72,8 +72,6 @@ docker plugin install --alias glusterfs mochoa/glusterfs-volume-plugin-aarch64 -
 if [[ $(echo $(hostname) | grep "\-0$") ]]; then
     docker swarm init --advertise-addr enp0s3
 fi
-
-docker plugin set glusterfs SERVERS=localhost
 
 docker plugin enable glusterfs
 docker plugin install --alias s3fs mochoa/s3fs-volume-plugin-aarch64 --grant-all-permissions --disable
