@@ -55,7 +55,7 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:2.5.1
+        image: portainer/portainer-ce:2.11.1
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -77,7 +77,7 @@ services:
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
-        image: traefik:v2.4.2
+        image: traefik:v2.6.1
         ports:
             - target: 80
               published: 80
@@ -99,6 +99,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /var/log/traefik:/var/log/traefik:rw
+            - registry:/data
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
