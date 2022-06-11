@@ -49,7 +49,7 @@ resource "random_string" "catalogue_db_password" {
   override_special = "{}#^*<>[]%~"
 }
 
-data "oci_database_autonomous_database_wallet" "autonomous_database_wallet" {
+resource "oci_database_autonomous_database_wallet" "autonomous_database_wallet" {
   autonomous_database_id = oci_database_autonomous_database.oci_swarm_autonomous_database.id
   password               = random_string.autonomous_database_wallet_password.result
   base64_encode_content  = "true"
