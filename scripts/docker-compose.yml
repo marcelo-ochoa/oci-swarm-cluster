@@ -11,8 +11,6 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.whoami.rule=Path(`/whoami`)
-                #- traefik.http.routers.whoami.entrypoints=https
-                #- traefik.http.routers.whoami.tls=true
                 - traefik.http.services.whoami.loadbalancer.server.port=80
         networks:
             - lb_network
@@ -33,8 +31,9 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.registry.rule=(Host(`registry.mydomain.com`) && PathPrefix(`/v2/`))
-                #- traefik.http.routers.registry.entrypoints=https
-                #- traefik.http.routers.registry.tls=true
+                - traefik.http.routers.registry.entrypoints=https
+                - traefik.http.routers.registry.tls=true
+                - traefik.http.routers.registry.tls.certresolver=le
                 - traefik.http.services.registry.loadbalancer.server.port=5000
 
     agent:
@@ -56,7 +55,7 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:2.1.1
+        image: portainer/portainer-ce:2.11.1
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -72,12 +71,13 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.portainer.rule=(Host(`dev-oci.mydomain.com`) && PathPrefix(`/`))
-                #- traefik.http.routers.portainer.entrypoints=https
-                #- traefik.http.routers.portainer.tls=true
+                - traefik.http.routers.portainer.entrypoints=https
+                - traefik.http.routers.portainer.tls=true
+                - traefik.http.routers.portainer.tls.certresolver=le
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
-        image: traefik:v2.4.2
+        image: traefik:v2.6.1
         ports:
             - target: 80
               published: 80
@@ -99,6 +99,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /var/log/traefik:/var/log/traefik:rw
+            - registry:/data
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
@@ -106,6 +107,10 @@ services:
             - --providers.docker.swarmmode
             - --entrypoints.http.address=:80
             - --entrypoints.https.address=:443
+            - --serversTransport.insecureSkipVerify=true
+            - --certificatesresolvers.le.acme.email=marcelo.ochoa@gmail.com
+            - --certificatesresolvers.le.acme.storage=/data/acme.json
+            - --certificatesresolvers.le.acme.tlschallenge=true
             - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
             #- --entryPoints.https.forwardedHeaders.trustedIPs=127.0.0.1/32,129.144.0.0/12,129.144.0.0/12,129.213.0.0/16,130.35.0.0/16,132.145.0.0/16,134.70.0.0/16,138.1.0.0/16,140.204.0.0/16,140.91.0.0/16,147.154.0.0/16,192.157.18.0/23,192.29.0.0/16,192.69.118.0/23,198.181.48.0/21,199.195.6.0/23,205.147.88.0/21
             #- --log.level=INFO

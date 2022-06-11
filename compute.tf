@@ -9,7 +9,12 @@ resource "oci_core_instance" "app_instance" {
   shape                               = var.instance_shape
   is_pv_encryption_in_transit_enabled = var.is_pv_encryption_in_transit_enabled
   freeform_tags                       = local.common_tags
-
+  shape_config {
+        # VM.Standard.A1.Flex (Ampere ARM-based procesor)
+        # one to four nodes Always Free Eligible
+        memory_in_gbs = var.memory_in_gbs
+        ocpus = var.ocpus
+    }
   create_vnic_details {
     subnet_id        = oci_core_subnet.oci_swarm_main_subnet.id
     display_name     = "primaryvnic"

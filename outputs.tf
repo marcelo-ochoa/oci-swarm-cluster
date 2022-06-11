@@ -15,6 +15,7 @@ output "autonomous_database_password" {
 # Use of this resource for production deployments is not recommended. 
 # Instead, generate a private key file outside of Terraform and distribute it securely to the system where Terraform will be run.
 output "generated_private_key_pem" {
+  sensitive = true
   value = var.generate_public_ssh_key ? tls_private_key.compute_ssh_key.private_key_pem : "No Keys Auto Generated"
 }
 

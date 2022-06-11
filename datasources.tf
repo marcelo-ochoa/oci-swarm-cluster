@@ -49,7 +49,7 @@ resource "random_string" "catalogue_db_password" {
   override_special = "{}#^*<>[]%~"
 }
 
-data "oci_database_autonomous_database_wallet" "autonomous_database_wallet" {
+resource "oci_database_autonomous_database_wallet" "autonomous_database_wallet" {
   autonomous_database_id = oci_database_autonomous_database.oci_swarm_autonomous_database.id
   password               = random_string.autonomous_database_wallet_password.result
   base64_encode_content  = "true"
@@ -65,18 +65,9 @@ data "oci_limits_services" "compute_services" {
     values = ["compute"]
   }
 }
-data "oci_limits_limit_definitions" "compute_limit_definitions" {
-  compartment_id = var.tenancy_ocid
-  service_name   = data.oci_limits_services.compute_services.services.0.name
-
-  filter {
-    name   = "description"
-    values = [var.instance_shape]
-  }
-}
 data "oci_limits_resource_availability" "compute_resource_availability" {
   compartment_id      = var.tenancy_ocid
-  limit_name          = data.oci_limits_limit_definitions.compute_limit_definitions.limit_definitions[0].name
+  limit_name          = "standard-a1-core-count"
   service_name        = data.oci_limits_services.compute_services.services.0.name
   availability_domain = data.oci_identity_availability_domains.ADs.availability_domains[count.index].name
 
