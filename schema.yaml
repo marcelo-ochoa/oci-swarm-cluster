@@ -19,6 +19,7 @@ groupings:
     - compartment_ocid
     - tenancy_ocid
     - region
+    - user_email
 
   - title: "General Configuration"
     variables:
