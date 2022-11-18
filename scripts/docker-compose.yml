@@ -30,7 +30,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.registry.rule=(Host(`registry.mydomain.com`) && PathPrefix(`/v2/`))
+                - traefik.http.routers.registry.rule=(Host(`registry.egitmen.me`) && PathPrefix(`/v2/`))
                 - traefik.http.routers.registry.entrypoints=https
                 - traefik.http.routers.registry.tls=true
                 - traefik.http.routers.registry.tls.certresolver=le
@@ -70,7 +70,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.portainer.rule=(Host(`dev-oci.mydomain.com`) && PathPrefix(`/`))
+                - traefik.http.routers.portainer.rule=(Host(`dev-oci.egitmen.me`) && PathPrefix(`/`))
                 - traefik.http.routers.portainer.entrypoints=https
                 - traefik.http.routers.portainer.tls=true
                 - traefik.http.routers.portainer.tls.certresolver=le
@@ -108,7 +108,7 @@ services:
             - --entrypoints.http.address=:80
             - --entrypoints.https.address=:443
             - --serversTransport.insecureSkipVerify=true
-            - --certificatesresolvers.le.acme.email=marcelo.ochoa@gmail.com
+            - --certificatesresolvers.le.acme.email=zekiozaytac@hotmail.com.tr
             - --certificatesresolvers.le.acme.storage=/data/acme.json
             - --certificatesresolvers.le.acme.tlschallenge=true
             - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
