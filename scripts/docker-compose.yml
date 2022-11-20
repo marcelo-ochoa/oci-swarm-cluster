@@ -102,12 +102,10 @@ services:
             - registry:/data
         labels:
             - traefik.enable=true
-            - traefik.http.routers.traefik.rule=Host(`traefik.egitmen.me`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+            - traefik.http.routers.traefik.rule=Host(`traefik.egitmen.me`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
             - traefik.http.routers.traefik.entrypoints=https
             - traefik.http.routers.traefik.tls=true
             - traefik.http.routers.traefik.tls.certresolver=le
-            - traefik.http.routers.traefik.service=api@internal
-            - traefik.http.services.traefik.loadbalancer.server.port=8080
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
