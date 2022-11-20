@@ -103,9 +103,11 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.traefik.rule=Host(`traefik.egitmen.me`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+            - traefik.http.routers.api.service=api@internal
             - traefik.http.routers.traefik.entrypoints=https
             - traefik.http.routers.traefik.tls=true
             - traefik.http.routers.traefik.tls.certresolver=le
+            - traefik.http.services.portainer.loadbalancer.server.port=8080
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
@@ -122,6 +124,7 @@ services:
             #- --log.level=INFO
             - --accesslog
             - --api
+            - --api.dashboard
             - --log
             - --log.filePath=/var/log/traefik/traefik.log
             - --accesslog.filepath=/var/log/traefik/access.log
