@@ -37,7 +37,7 @@ services:
                 - traefik.http.services.registry.loadbalancer.server.port=5000
 
     agent:
-        image: portainer/agent
+        image: portainer/agent:latest
         environment:
             # REQUIRED: Should be equal to the service name prefixed by "tasks." when
             # deployed inside an overlay network
@@ -55,7 +55,7 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:2.11.1
+        image: portainer/portainer-ce:latest
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -77,7 +77,7 @@ services:
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
-        image: traefik:v2.6.1
+        image: traefik:latest
         ports:
             - target: 80
               published: 80
@@ -100,6 +100,14 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /var/log/traefik:/var/log/traefik:rw
             - registry:/data
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.traefik.rule=Host(`traefik.egitmen.me`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+            - traefik.http.routers.traefik.entrypoints=https
+            - traefik.http.routers.traefik.tls=true
+            - traefik.http.routers.traefik.tls.certresolver=le
+            - traefik.http.routers.traefik.service=api@internal
+            - traefik.http.services.traefik.loadbalancer.server.port=8080
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
