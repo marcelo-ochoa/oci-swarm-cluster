@@ -5,9 +5,7 @@
 variable "tenancy_ocid" {}
 variable "region" {}
 variable "compartment_ocid" {}
-variable "user_email" {
-  default = "bernhard@mailo.com"
-}
+variable "user_email" {}
 
 variable "user_ocid" {
   default = ""
