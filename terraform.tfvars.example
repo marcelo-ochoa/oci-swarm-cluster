@@ -10,24 +10,24 @@
 #############################################################################################################################
 
 # OCI authentication
-tenancy_ocid     = "ocid1.tenancy.oc1....."
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaa5xpy7vmimxytzk42dra663e2taa7mqemrrpssoptlvc7qx5zbp4a"
 fingerprint      = "" # e.g.: "5f:53:..." or leave blank if using CloudShell
 user_ocid        = "" # e.g.: "ocid1.user..." or leave blank if using CloudShell
 private_key_path = "" # e.g.: "/users/user/.oci/oci_api_key.pem" or leave blank if using CloudShell
-user_email       = "myname@mydomain.tld"
+user_email       = "contact@bernhard.kaindl.dev"
 
 # Deployment compartment
-compartment_ocid = "ocid1.tenancy.oc1....."
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaadb7tkchczrzdbemjnzsxzt4azzl3a2v7gpt2yfnzgc73a2vovliq"
 
 # region
-region = "us-phoenix-1"
+region = "eu-frankfurt-1"
 
 # Compute
 num_nodes                           = 2
-instance_shape                      = "VM.Standard.E2.1.Micro"
+instance_shape                      = "VM.Standard.A1.Flex"
 instance_visibility                 = "Public"
-generate_public_ssh_key             = true
-public_ssh_key                      = ""
+generate_public_ssh_key             = false
+public_ssh_key                      = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICNJExrZKgV+/dms62BFTOMvZ2mIDdrEtcKzzjt05UOa contact@bernhard.kaindl.dev"
 is_pv_encryption_in_transit_enabled = false
 
 # Network Details

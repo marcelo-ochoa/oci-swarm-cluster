@@ -2,8 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 # 
 
-title: "Three-tier web application using Always-Free resources"
-description: "A demo eCommerce example app (OciSwarm Basic) using Always-Free Oracle Cloud Infrastructure"
+title: "Three-tier web application using Docker Swarm based on using Always-Free resources"
+description: "Docker Swarm Based on OciSwarm Basic using Always-Free Oracle Cloud Infrastructure"
 schemaVersion: 1.1.0
 version: "20190304"
 
@@ -166,11 +166,14 @@ variables:
       allowMultiple: true
     pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
     visible:
-      and:
-        - and:
-          - show_advanced
-        - not:
+# Disabled generating ssh key, use id_rsa.pub/id_ed25525.pub ssh key(s) added to the repo:
+      - not:
           - generate_public_ssh_key
+#     and:
+#       - and:
+#         - show_advanced
+#       - not:
+#         - generate_public_ssh_key
 
   is_pv_encryption_in_transit_enabled:
     type: boolean

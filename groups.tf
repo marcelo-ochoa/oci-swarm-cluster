@@ -3,7 +3,15 @@
 # 
 
 resource "oci_identity_group" "storage_admins" {
-  description    = "Group for users allowed manage the Storage resources in the tenancy."
-  name           = "StorageAdmins.grp"
-  compartment_id = var.compartment_ocid
+  description    = "Group to manage the Storage resources in the tenancy."
+  name           = "StorageAdmins-${random_string.deploy_id.result}.grp"
+  # https://docs.oracle.com/en-us/iaas/api/#/en/identity/20160918/Group/CreateGroup:
+  # Creates a new group in your tenancy.
+  # You must specify your tenancy's OCID as the compartment ID in the request object
+  # (remember that the tenancy is simply the root compartment):
+  compartment_id = var.tenancy_ocid
+  # Fixes:
+  # Error: 400-InvalidParameter, Tenant id is not equal to compartment id
+  # Suggestion: Please update the parameter(s) in the Terraform config as per
+  # error message Tenant id is not equal to compartment id
 }

@@ -30,14 +30,14 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.registry.rule=(Host(`registry.mydomain.com`) && PathPrefix(`/v2/`))
+                - traefik.http.routers.registry.rule=(Host(`registry.host.kaindl.dev`) && PathPrefix(`/v2/`))
                 - traefik.http.routers.registry.entrypoints=https
                 - traefik.http.routers.registry.tls=true
                 - traefik.http.routers.registry.tls.certresolver=le
                 - traefik.http.services.registry.loadbalancer.server.port=5000
 
     agent:
-        image: portainer/agent
+        image: portainer/agent:latest
         environment:
             # REQUIRED: Should be equal to the service name prefixed by "tasks." when
             # deployed inside an overlay network
@@ -55,7 +55,7 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:2.11.1
+        image: portainer/portainer-ce:latest
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -70,14 +70,14 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.portainer.rule=(Host(`dev-oci.mydomain.com`) && PathPrefix(`/`))
+                - traefik.http.routers.portainer.rule=(Host(`portainer.host.kaindl.dev`) && PathPrefix(`/`))
                 - traefik.http.routers.portainer.entrypoints=https
                 - traefik.http.routers.portainer.tls=true
                 - traefik.http.routers.portainer.tls.certresolver=le
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
-        image: traefik:v2.6.1
+        image: traefik:latest
         ports:
             - target: 80
               published: 80
@@ -100,6 +100,14 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /var/log/traefik:/var/log/traefik:rw
             - registry:/data
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.traefik.rule=Host(`traefik.host.kaindl.dev`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+            - traefik.http.routers.api.service=api@internal
+            - traefik.http.routers.traefik.entrypoints=https
+            - traefik.http.routers.traefik.tls=true
+            - traefik.http.routers.traefik.tls.certresolver=le
+            - traefik.http.services.portainer.loadbalancer.server.port=8080
         command:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
@@ -108,7 +116,7 @@ services:
             - --entrypoints.http.address=:80
             - --entrypoints.https.address=:443
             - --serversTransport.insecureSkipVerify=true
-            - --certificatesresolvers.le.acme.email=marcelo.ochoa@gmail.com
+            - --certificatesresolvers.le.acme.email=bernhard@mailo.com
             - --certificatesresolvers.le.acme.storage=/data/acme.json
             - --certificatesresolvers.le.acme.tlschallenge=true
             - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
@@ -116,6 +124,7 @@ services:
             #- --log.level=INFO
             - --accesslog
             - --api
+            - --api.dashboard
             - --log
             - --log.filePath=/var/log/traefik/traefik.log
             - --accesslog.filepath=/var/log/traefik/access.log

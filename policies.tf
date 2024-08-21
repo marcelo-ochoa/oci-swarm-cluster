@@ -21,7 +21,7 @@ resource "oci_objectstorage_object_lifecycle_policy" "oci_swarm_deploy_assets_li
 resource "oci_identity_policy" "oci_swarm_basic_policies" {
   name           = "oci-swarm-basic-policies-${random_string.deploy_id.result}"
   description    = "Policies created by terraform for OciSwarm Basic"
-  compartment_id = var.compartment_ocid
+  compartment_id = var.tenancy_ocid
   statements     = local.oci_swarm_basic_policies_statement
   freeform_tags  = local.common_tags
 
@@ -31,7 +31,7 @@ resource "oci_identity_policy" "oci_swarm_basic_policies" {
 resource "oci_identity_policy" "storage_admins" {
   name           = "StorageAdmins.pl"
   description    = "StorageAdmins.pl"
-  compartment_id = var.compartment_ocid
+  compartment_id = var.tenancy_ocid
 
   statements = [
     "ALLOW GROUP ${oci_identity_group.storage_admins.name} to manage object-family IN TENANCY",
