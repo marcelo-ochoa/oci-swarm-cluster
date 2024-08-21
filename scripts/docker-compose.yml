@@ -37,7 +37,15 @@ services:
                 - traefik.http.services.registry.loadbalancer.server.port=5000
 
     agent:
-        image: portainer/agent:latest
+        # The STS version is needed to work with Docker 0.0.26 (they changed the API!):
+        # Docker 26 broke opening consoles of containers in the LTS Portainer versions
+        # by removing an API without telling the Portainer guys. Well done, guys!
+        # Because the scripts install the latest version of Docker, this bug hits.
+        # The only available workaround is to use the ShortTerm Portainer 2.20.x
+        # which also has the sts tag for ShortTermSupport. Nice, Love Docker...!
+        # https://www.portainer.io/blog/portainer-and-docker-26
+        # https://github.com/portainer/portainer/issues/11436
+        image: portainer/agent:sts
         environment:
             # REQUIRED: Should be equal to the service name prefixed by "tasks." when
             # deployed inside an overlay network
@@ -55,7 +63,14 @@ services:
                 constraints: [node.platform.os == linux]
 
     portainer:
-        image: portainer/portainer-ce:latest
+        # The STS version is needed to work with Docker 0.0.26 (they changed the API!):
+        # Docker 26 broke opening consoles of containers in the LTS Portainer versions
+        # by removing an API without telling the Portainer guys. Well done, guys!
+        # Because the scripts install the latest version of Docker, this bug hits.
+        # The only available workaround is to use the ShortTerm Portainer 2.20.x
+        # which also has the sts tag for ShortTermSupport. Nice, Love Docker...!
+        # https://github.com/portainer/portainer/issues/11436
+        image: portainer/portainer-ce:sts
         command: -H tcp://tasks.swarm_agent:9001 --tlsskipverify
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
