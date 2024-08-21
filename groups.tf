@@ -4,7 +4,7 @@
 
 resource "oci_identity_group" "storage_admins" {
   description    = "Group to manage the Storage resources in the tenancy."
-  name           = "StorageAdmins.grp"
+  name           = "StorageAdmins-${random_string.deploy_id.result}.grp"
   # https://docs.oracle.com/en-us/iaas/api/#/en/identity/20160918/Group/CreateGroup:
   # Creates a new group in your tenancy.
   # You must specify your tenancy's OCID as the compartment ID in the request object
