@@ -2,8 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
 # 
 
-title: "Three-tier web application using Always-Free resources"
-description: "A demo eCommerce example app (OciSwarm Basic) using Always-Free Oracle Cloud Infrastructure"
+title: "Three-tier web application using Docker Swarm based on using Always-Free resources"
+description: "Docker Swarm Based on OciSwarm Basic using Always-Free Oracle Cloud Infrastructure"
 schemaVersion: 1.1.0
 version: "20190304"
 
