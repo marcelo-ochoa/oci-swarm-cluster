@@ -77,7 +77,8 @@ services:
                 - traefik.http.services.portainer.loadbalancer.server.port=9000
 
     traefik:
-        image: traefik:latest
+        # SwarmMode was changed to another setting in 3.1, so this needs updating for 3.1:
+        image: traefik:v2.11
         ports:
             - target: 80
               published: 80
@@ -112,6 +113,7 @@ services:
             - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
             - --providers.docker.exposedbydefault=false
+            # SwarmMode was changed to another setting in 3.1, so this needs updating for 3.1:
             - --providers.docker.swarmmode
             - --entrypoints.http.address=:80
             - --entrypoints.https.address=:443
